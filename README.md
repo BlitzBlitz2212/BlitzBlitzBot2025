@@ -11,7 +11,7 @@ Welcome to the **BlitzBlitz #2212** repository! This is a collaborattion for the
 ## Setup
 
 1. Clone the repository:  
-   `git clone https://github.com/BlitzBlitz-2212/robot-2025-submerged.git`
+   `git clone https://github.com/BlitzBlitz2212/BlitzBlitzBot2025.git`
    
 2. Create a virtual environment:  
    `python -m venv .venv`
