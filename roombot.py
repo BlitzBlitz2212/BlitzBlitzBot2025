@@ -6,16 +6,24 @@ from pybricks.tools import wait, StopWatch
 
 hub = PrimeHub()
 
+
+#colors
+
+Color.BLACK = Color(180, 9, 24)
+Color.RED = Color(352, 90, 96)
+Color.MAGENTA = Color(340, 84, 87)
+
+
 #wheels
 right_wheel = Motor(Port.F)
 left_wheel = Motor(Port.B, Direction.COUNTERCLOCKWISE)
 roombot = DriveBase(left_wheel, right_wheel, 62.4, 108)
-# roombot.straight(500)
+
 #bearing
 bear = Motor(Port.A, Direction.COUNTERCLOCKWISE, gears=(28, 140))
+
 #active arm
 arm = Motor(Port.E, Direction.COUNTERCLOCKWISE)
-# arm.run_time(1000, 2500?)
 
 #color sensor
 sensor = ColorSensor(Port.D)
@@ -26,16 +34,16 @@ roombot.use_gyro(True)
 def turn_bear(angle, speed=100, wait=True):
     bear.run_angle(speed, angle, wait=wait)
 
-def abs_bear(angle, speed=100, then=Stop.HOLD):
+def abs_bear(angle, speed=100, then=Stop.HOLD, wait = True):
     start_angle = (bear.angle() + 360) % 360  # 208
     print(start_angle)
     deg_to_turn = (angle - start_angle) % 360  # 242
     print(deg_to_turn)
     if then == Stop.NONE:
         if deg_to_turn >= 180:
-            bear.run_angle(speed, deg_to_turn - 360)
+            turn_bear(speed, deg_to_turn - 360, wait = wait)
         else:
-            bear.run_angle(speed, deg_to_turn)
+            turn_bear(speed, deg_to_turn, wait = wait)
         return
     if deg_to_turn >= 180:
         bear.run_angle(speed, deg_to_turn - 360)
@@ -64,16 +72,25 @@ def wall_turn(angle, speed = 70):
     roombot.turn(angle, wait=False)
     bear.run_angle(speed, -angle)
     wait(200)
-# no_wall_turn(100)
-# roombot.curve(500, 20)
-# roombot.straight(600)
-# bear.run_time(1000, 100000)
-# arm.run_time(-400, 5000)
-# no_wall_turn(-600)
-# roombot.straight(2000, wait=False)
-# turn_bear(1000, wait=False)
-# arm.run_time(1000, 3000)
-# turn_bear(500)
+def turn_to(angle, then=Stop.HOLD):
+    print(hub.imu.heading())
+    start_angle = (hub.imu.heading() + 360) % 360  # 208
+    print(start_angle)
+    deg_to_turn = (angle - start_angle) % 360  # 242
+    print(deg_to_turn)
+    if then == Stop.NONE:
+        if deg_to_turn >= 180:
+            chassis.turn(deg_to_turn - 360)
+        else:
+            chassis.turn(deg_to_turn)
+        return
+    if deg_to_turn >= 180:
+        roombot.turn(deg_to_turn - 360)
+    else:
+        roombot.turn(deg_to_turn)
+
+# while "1+1 = 3":
+#     print(sensor.hsv())
 def run1():
     roombot.settings(300, straight_acceleration=550, turn_rate=150)
     arm.run_time(1000,1000,wait=False)
@@ -81,17 +98,33 @@ def run1():
     roombot.turn(45)
     roombot.straight(100)
     arm.run_time(-500,2000)
+    roombot.straight(-50)
     right_wheel.run_angle(500,-500)
-    roombot.straight(-70)
-    turn_bear(-60)
-    roombot.straight(-270)
-    roombot.straight(30)
-    turn_bear(70)
+    turn_to(180)
+    roombot.straight(-550, wait=False)
+    turn_bear(-30)
+    wait(300)
+    turn_bear(30)
+    wait(2000)
+    roombot.straight(145)
     roombot.turn(90)
-    no_wall_turn(-200)
-    roombot.straight(-100)
+    roombot.settings(100)
+    roombot.straight(-200)
+    roombot.settings(300)
     arm.run_time(500,1500, wait=False)
+    turn_to(-85)
     roombot.straight(1000)
+    wall_turn(45)
+    roombot.straight(100)
+    wall_turn(-90)
+    print('hi')
+    roombot.straight(100)
+    roombot.straight(200, then=Stop.NONE)
+    roombot.curve(400, 45)
+    roombto.straight(300)
+
+
+
     
     # turn_bear(700)
     # no_wall_turn(-45)
@@ -102,16 +135,54 @@ def run1():
 
 
 # roombot.straight(500)
-# run1()
-roombot.straight(500)
-turn_bear(90)
-turn_bear(10)
-abs_bear(0)
+def cycle(iterable):
+    iterator = iter(iterable)
+    while True:
+        try:
+            yield next(iterator)
+        except StopIteration:
+            iterator = iter(iterable)
 
-# bear.dc(100)
-# no_wall_turn(360)
-# roombot.straight(1000)
-# wall_turn(360)
-# turn_bear(360, 900)
-# left_wheel.s
-# no_wall_turn(-360)
+
+back_color.detectable_colors(run_colors)
+color_cycle = cycle(run_colors)
+color_map = {
+    Color.BLACK: "B",
+    Color.YELLOW: "Y",
+    Color.GREEN: "G",
+
+}
+
+while back_color.color() != next(color_cycle):
+    pass
+
+menu = [color_map[back_color.color()]]
+for i in range(len(run_colors) - 1):
+    menu.append(color_map[next(color_cycle)])
+
+
+selected = hub_menu(*menu)  # pylint: disable=E1111
+
+if selected == "R":
+    red()
+elif selected == "B":
+    blue()
+elif selected == "G":
+    green()
+elif selected == "K":
+    black()
+elif selected == "Y":
+    yellow()
+elif selected == "M":
+    blue_2()
+elif selected == "W":
+    chassis.settings(150)
+    chassis.straight(150)
+    chassis.settings(300)
+    chassis.straight(-300)
+    # left_wheel.dc(100)
+    # right_wheel.dc(100)
+    # while "1 + 1 = 3":
+    #     pass
+
+print(selected)
