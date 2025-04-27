@@ -95,16 +95,34 @@ def turn_to(angle, then=Stop.HOLD):
     else:
         roombot.turn(deg_to_turn)
 
+def straight_time(speed, time):
+    timer = StopWatch()
+    last = roombot.settings()[0]
+    roombot.settings(speed)
+
+    while timer.time() < time:
+        if speed > 0:
+            roombot.straight(1000, wait=False)
+        else:
+            roombot.straight(-1000, wait=False)
+    roombot.stop()
+
+    roombot.settings(last)
+
 # while "1+1 = 3":
 #     print(sensor.hsv())
 def run1():
+    #setup/sttings
     roombot.settings(350, straight_acceleration=500, turn_rate=150)
+    hub.imu.reset_heading(0)
     arm.run_time(1000,1000,wait=False)
+    #Change the cruise routes
     roombot.straight(290)
     roombot.turn(45)
-    roombot.straight(100)
+    roombot.straight(60)
     arm.run_time(-500,2000)
-    roombot.straight(-50)
+    #Collecting things
+    roombot.straight(-20)
     right_wheel.run_angle(500,-500)
     turn_to(180)
     roombot.settings(straight_acceleration=130)
@@ -115,26 +133,35 @@ def run1():
     turn_bear(30)
     roombot.settings(straight_acceleration=500)
     wait(2000)
-    roombot.straight(180)
+    roombot.straight(175)
     turn_to(-90)
     roombot.settings(100)
-    roombot.straight(-150)
+    straight_time(-130, 2000)
+    #driving
     roombot.settings(300)
     arm.run_angle(500,90, wait=False)
     roombot.settings(turn_rate=70)
     turn_to(-90)
     roombot.settings(turn_rate=150)
-    roombot.straight(400)
-    turn_to(-86)
-    roombot.straight(940)
+    roombot.straight(400, wait=False)
+    wait(1000)
+    turn_bear(-35)
+    wait(200)
+    turn_to(-87.5)
+    # arm.run_angle(1000,-90,wait=False)
+    roombot.straight(870)
+    turn_bear(35)
     turn_to(-90)
-    wall_turn(-90)
-    roombot.straight(-100)
-    roombot.turn(20)
-    # turn_bear(-90, wait=False)
-    roombot.straight(100)
-    roombot.curve(-45, 200)
-    roombot.straihgt(300)
+    wall_turn(-93.5)
+    roombot.straight(-160)
+    turn_bear(-90, wait=False)
+    roombot.straight(160)
+    wall_turn(90)
+    roombot.straight(50)
+    roombot.curve(120, -70)
+    roombot.straight(300,then=Stop.NONE)
+    roombot.curve(300, 45,then=Stop.NONE)
+    roombot.straight(500)
 
 def run2():
     roombot.straight(200)
