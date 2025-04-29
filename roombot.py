@@ -139,29 +139,27 @@ def run1():
     straight_time(-130, 2000)
     #driving
     roombot.settings(300)
-    arm.run_angle(500,90, wait=False)
+    arm.run_angle(1000,90,wait=False)
     roombot.settings(turn_rate=70)
     turn_to(-90)
     roombot.settings(turn_rate=150)
     roombot.straight(400, wait=False)
     wait(1000)
-    turn_bear(-35)
+    # turn_bear(-35)
     wait(200)
-    turn_to(-87.5)
-    # arm.run_angle(1000,-90,wait=False)
-    roombot.straight(870)
-    turn_bear(35)
+    turn_to(-87)
+    roombot.straight(1000)
+    # turn_bear(35)
     turn_to(-90)
     wall_turn(-93.5)
     roombot.straight(-160)
-    turn_bear(-90, wait=False)
-    roombot.straight(160)
+    arm.run_time(-500,2000, wait=False)
+    roombot.straight(110)
+    roombot.curve(60, -60, wait=False)
     wall_turn(90)
-    roombot.straight(50)
-    roombot.curve(120, -70)
-    roombot.straight(300,then=Stop.NONE)
-    roombot.curve(300, 45,then=Stop.NONE)
-    roombot.straight(500)
+    # roombot.straight(300,then=Stop.NONE)
+    # roombot.curve(300, 45,then=Stop.NONE)
+    # roombot.straight(500)
 
 def run2():
     roombot.straight(200)
@@ -194,9 +192,9 @@ def cycle(iterable):
 sensor.detectable_colors(run_colors)
 color_cycle = cycle(run_colors)
 color_map = {
-    Color.BLACK: "B",
-    Color.YELLOW: "Y",
-    Color.PURPLE: "P",
+    Color.BLACK: "1",
+    Color.YELLOW: "2",
+    Color.PURPLE: "3",
 }
 
 while sensor.color() != next(color_cycle):
@@ -209,11 +207,11 @@ for i in range(len(run_colors) - 1):
 
 selected = hub_menu(*menu)  # pylint: disable=E1111
 
-if selected == "B":
+if selected == "1":
     run1()
-elif selected == "P":
+elif selected == "2":
     run2()
-elif selected == "Y":
+elif selected == "3":
     run3()
 
 print(selected)
