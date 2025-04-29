@@ -8,53 +8,51 @@ from pybricks.tools import hub_menu
 hub = PrimeHub()
 
 
-#colors
+# colors
 
-Color.BLACK = Color(180, 19, 5) #run1
-Color.YELLOW = Color(0, 0, 0) #run3
-Color.PURPLE = Color(340, 86, 26) #run2
+Color.BLACK = Color(180, 19, 5)  # run1
+Color.YELLOW = Color(51, 75, 62)  # run3
+Color.PURPLE = Color(340, 86, 26)  # run2
 
-run_colors = (
-    Color.BLACK,
-    Color.YELLOW,
-    Color.PURPLE
-)
+run_colors = (Color.BLACK, Color.YELLOW, Color.PURPLE)
 
-#wheels
+# wheels
 right_wheel = Motor(Port.F)
 left_wheel = Motor(Port.B, Direction.COUNTERCLOCKWISE)
 roombot = DriveBase(left_wheel, right_wheel, 62.4, 108)
 
-#bearing
+# bearing
 bear = Motor(Port.A, Direction.COUNTERCLOCKWISE, gears=(28, 140))
 
-#active arm
+# active arm
 arm = Motor(Port.E, Direction.COUNTERCLOCKWISE)
 
-#color sensor
+# color sensor
 sensor = ColorSensor(Port.D)
-#other defenitions
+# other defenitions
 roombot.use_gyro(True)
 
 
 def turn_bear(angle, speed=100, wait=True):
     bear.run_angle(speed, angle, wait=wait)
 
-def abs_bear(angle, speed=100, then=Stop.HOLD, wait = True):
+
+def abs_bear(angle, speed=100, then=Stop.HOLD, wait=True):
     start_angle = (bear.angle() + 360) % 360  # 208
     print(start_angle)
     deg_to_turn = (angle - start_angle) % 360  # 242
     print(deg_to_turn)
     if then == Stop.NONE:
         if deg_to_turn >= 180:
-            turn_bear(speed, deg_to_turn - 360, wait = wait)
+            turn_bear(speed, deg_to_turn - 360, wait=wait)
         else:
-            turn_bear(speed, deg_to_turn, wait = wait)
+            turn_bear(speed, deg_to_turn, wait=wait)
         return
     if deg_to_turn >= 180:
         bear.run_angle(speed, deg_to_turn - 360)
     else:
         bear.run_angle(speed, deg_to_turn)
+
 
 def no_wall_turn(angle, speed=70):
     """speed: deg/s"""
@@ -73,11 +71,14 @@ def no_wall_turn(angle, speed=70):
 
     bear.control.limits(acceleration=motor_acceleration)
 
-def wall_turn(angle, speed = 70):
+
+def wall_turn(angle, speed=70):
     roombot.settings(turn_rate=speed)
     roombot.turn(angle, wait=False)
     bear.run_angle(speed, -angle)
     wait(200)
+
+
 def turn_to(angle, then=Stop.HOLD):
     print(hub.imu.heading())
     start_angle = (hub.imu.heading() + 360) % 360  # 208
@@ -86,14 +87,15 @@ def turn_to(angle, then=Stop.HOLD):
     print(deg_to_turn)
     if then == Stop.NONE:
         if deg_to_turn >= 180:
-            chassis.turn(deg_to_turn - 360)
+            roombot.turn(deg_to_turn - 360)
         else:
-            chassis.turn(deg_to_turn)
+            roombot.turn(deg_to_turn)
         return
     if deg_to_turn >= 180:
         roombot.turn(deg_to_turn - 360)
     else:
         roombot.turn(deg_to_turn)
+
 
 def straight_time(speed, time):
     timer = StopWatch()
@@ -109,24 +111,34 @@ def straight_time(speed, time):
 
     roombot.settings(last)
 
+
 # while "1+1 = 3":
 #     print(sensor.hsv())
 def run1():
-    #setup/sttings
+    # setup/sttings
     roombot.settings(350, straight_acceleration=500, turn_rate=150)
     hub.imu.reset_heading(0)
-    arm.run_time(1000,1000,wait=False)
-    #Change the cruise routes
+    arm.run_time(1000, 1000, wait=False)
+    # Change the cruise routes
     roombot.straight(290)
     roombot.turn(45)
     roombot.straight(60)
-    arm.run_time(-500,2000)
-    #Collecting things
-    roombot.straight(-20)
-    right_wheel.run_angle(500,-500)
+    arm.run_time(-500, 2000)
+    # Colliding with the unknown creature
+    roombot.straight(-200)
+    no_wall_turn(140)
+    roombot.settings(500)
+    roombot.straight(-400)
+    roombot.settings(350)
+    roombot.straight(250)
     turn_to(180)
+    abs_bear(0)
+    # Collecting things
+    # roombot.straight(-20)
+    # right_wheel.run_angle(500, -500)
+    # turn_to(180)
     roombot.settings(straight_acceleration=130)
-    roombot.straight(-550, wait=False)
+    roombot.straight(-620, wait=False)
     wait(700)
     turn_bear(-30)
     wait(300)
@@ -136,10 +148,10 @@ def run1():
     roombot.straight(175)
     turn_to(-90)
     roombot.settings(100)
-    straight_time(-130, 2000)
-    #driving
+    straight_time(-130, 2500)
+    # driving
     roombot.settings(300)
-    arm.run_angle(1000,90,wait=False)
+    arm.run_angle(1000, 90, wait=False)
     roombot.settings(turn_rate=70)
     turn_to(-90)
     roombot.settings(turn_rate=150)
@@ -153,13 +165,17 @@ def run1():
     turn_to(-90)
     wall_turn(-93.5)
     roombot.straight(-160)
-    arm.run_time(-500,2000, wait=False)
+    arm.run_time(-500, 2000, wait=False)
     roombot.straight(110)
     roombot.curve(60, -60, wait=False)
     wall_turn(90)
+    roombot.turn(-80)
+    roombot.settings(450)
+    roombot.straight(700)
     # roombot.straight(300,then=Stop.NONE)
     # roombot.curve(300, 45,then=Stop.NONE)
     # roombot.straight(500)
+
 
 def run2():
     roombot.straight(200)
@@ -169,14 +185,11 @@ def run2():
 def run3():
     print("we are NEVER getting here")
 
-
-    
     # turn_bear(700)
     # no_wall_turn(-45)
     # roombot.turn(-45)
     # roombot.straight
     # turn_bear(180)
-
 
 
 # roombot.straight(500)
@@ -193,8 +206,8 @@ sensor.detectable_colors(run_colors)
 color_cycle = cycle(run_colors)
 color_map = {
     Color.BLACK: "1",
-    Color.YELLOW: "2",
-    Color.PURPLE: "3",
+    Color.YELLOW: "3",
+    Color.PURPLE: "2",
 }
 
 while sensor.color() != next(color_cycle):
