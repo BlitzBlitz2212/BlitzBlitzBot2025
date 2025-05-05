@@ -125,12 +125,14 @@ def run1():
     roombot.straight(60)
     arm.run_time(-500, 2000)
     # Colliding with the unknown creature
-    roombot.straight(-200)
+    roombot.straight(-220)
     no_wall_turn(140)
     roombot.settings(500)
     roombot.straight(-400)
     roombot.settings(350)
     roombot.straight(250)
+    turn_to(90)
+    roombot.straight(15)
     turn_to(180)
     abs_bear(0)
     # Collecting things
@@ -138,14 +140,14 @@ def run1():
     # right_wheel.run_angle(500, -500)
     # turn_to(180)
     roombot.settings(straight_acceleration=130)
-    roombot.straight(-620, wait=False)
+    roombot.straight(-650, wait=False)
     wait(700)
-    turn_bear(-30)
+    turn_bear(35)
     wait(300)
-    turn_bear(30)
+    turn_bear(-40)
     roombot.settings(straight_acceleration=500)
     wait(2000)
-    roombot.straight(175)
+    roombot.straight(170)
     turn_to(-90)
     roombot.settings(100)
     straight_time(-130, 2500)
@@ -169,11 +171,11 @@ def run1():
     roombot.straight(110)
     roombot.curve(60, -60, wait=False)
     wall_turn(90)
-    roombot.turn(-80)
+    roombot.turn(-40)
     roombot.settings(450)
-    roombot.straight(700)
-    # roombot.straight(300,then=Stop.NONE)
-    # roombot.curve(300, 45,then=Stop.NONE)
+    # roombot.straight(700)
+    # roombot.straight(300, then=Stop.NONE)
+    # roombot.curve(300, 45, then=Stop.NONE)
     # roombot.straight(500)
 
 
@@ -183,7 +185,23 @@ def run2():
 
 
 def run3():
-    print("we are NEVER getting here")
+    straight_acceleration = 500
+    turn_rate = 150
+    roombot.settings(350, straight_acceleration, turn_rate)
+    hub.imu.reset_heading(0)
+    arm.run_time(1000, 100, wait=False)
+    roombot.straight(-300)
+    turn_to(-45)
+    roombot.straight(-190)
+    turn_to(-0)
+    roombot.straight(-330)
+    turn_to(55)
+    roombot.straight(-300)
+    roombot.straight(210)
+    wall_turn(-90)
+    roombot.straight(-200)
+    roombot.straight(100)
+    # wall_turn(-90)
 
     # turn_bear(700)
     # no_wall_turn(-45)
@@ -205,7 +223,7 @@ def cycle(iterable):
 sensor.detectable_colors(run_colors)
 color_cycle = cycle(run_colors)
 color_map = {
-    Color.BLACK: "1",
+    Color.BLACK: "s",
     Color.YELLOW: "3",
     Color.PURPLE: "2",
 }
@@ -220,7 +238,7 @@ for i in range(len(run_colors) - 1):
 
 selected = hub_menu(*menu)  # pylint: disable=E1111
 
-if selected == "1":
+if selected == "s":
     run1()
 elif selected == "2":
     run2()
