@@ -194,20 +194,29 @@ def run3():
     turn_to(-45)
     roombot.straight(-190)
     turn_to(-0)
-    roombot.straight(-330)
+    roombot.straight(-320)
     turn_to(55)
-    roombot.straight(-300)
-    roombot.straight(210)
+    roombot.straight(-350)
+    roombot.straight(215)
     wall_turn(-90)
+    roombot.straight(-150)
+    roombot.straight(70)
+    wall_turn(90)
+    turn_to(90)
+    roombot.straight(400)
+    turn_to(135)
+    roombot.settings(500, 500)
+    roombot.straight(250)
+    arm.run_time(-500, 3000)
+    roombot.settings(350, straight_acceleration, turn_rate)
     roombot.straight(-200)
-    roombot.straight(100)
-    # wall_turn(-90)
 
-    # turn_bear(700)
-    # no_wall_turn(-45)
-    # roombot.turn(-45)
-    # roombot.straight
-    # turn_bear(180)
+
+# turn_bear(700)
+# no_wall_turn(-45)
+# roombot.turn(-45)
+# roombot.straight
+# turn_bear(180)
 
 
 # roombot.straight(500)
@@ -223,7 +232,7 @@ def cycle(iterable):
 sensor.detectable_colors(run_colors)
 color_cycle = cycle(run_colors)
 color_map = {
-    Color.BLACK: "s",
+    Color.BLACK: "S",
     Color.YELLOW: "3",
     Color.PURPLE: "2",
 }
