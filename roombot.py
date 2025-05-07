@@ -247,7 +247,7 @@ for i in range(len(run_colors) - 1):
 
 selected = hub_menu(*menu)  # pylint: disable=E1111
 
-if selected == "s":
+if selected == "S":
     run1()
 elif selected == "2":
     run2()
