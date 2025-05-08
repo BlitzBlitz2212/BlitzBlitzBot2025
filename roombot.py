@@ -14,7 +14,7 @@ Color.BLACK = Color(180, 19, 5)  # run1
 Color.YELLOW = Color(51, 75, 62)  # run3
 Color.PURPLE = Color(340, 86, 26)  # run2
 
-run_colors = (Color.BLACK, Color.YELLOW, Color.PURPLE)
+run_colors = (Color.BLACK, Color.YELLOW, Color.PURPLE, Color.WHITE)
 
 # wheels
 right_wheel = Motor(Port.F)
@@ -26,7 +26,7 @@ bear = Motor(Port.A, Direction.COUNTERCLOCKWISE, gears=(28, 140))
 
 # active arm
 arm = Motor(Port.E, Direction.COUNTERCLOCKWISE)
-
+arm.run_time(5000, 5000)
 # color sensor
 sensor = ColorSensor(Port.D)
 # other defenitions
@@ -115,9 +115,9 @@ def straight_time(speed, time):
 # while "1+1 = 3":
 #     print(sensor.hsv())
 def run1():
+    hub.imu.reset_heading(0)
     # setup/sttings
     roombot.settings(350, straight_acceleration=500, turn_rate=150)
-    hub.imu.reset_heading(0)
     arm.run_time(1000, 1000, wait=False)
     # Change the cruise routes
     roombot.straight(290)
@@ -180,24 +180,52 @@ def run1():
 
 
 def run2():
+    hub.imu.reset_heading(0)
     roombot.settings(220, straight_acceleration=350, turn_rate=150)
     roombot.straight(100)
     wall_turn(20)
-    roombot.straight(500)
+    roombot.straight(475)
     wall_turn(70)
     straight_time(100, 3000)
-    roombot.straight(-180)
+    roombot.straight(-150)
     wall_turn(90)
-    roombot.straight(-100)
-    roombot.turn(-90)
+    roombot.straight(-140)
+    roombot.settings(turn_rate=70)
+    turn_to(87)
+    roombot.settings(turn_rate=150)
     roombot.straight(-300)
-    turn_bear(20000)
+    roombot.straight(20)
+    turn_to(120)
+    roombot.straight(-400)
+    roombot.straight(200)
+    turn_to(180)
+
 
 def run3():
+    hub.imu.reset_heading(45)
+    straight_speed = 350
+    straight_acceleration = 300
+    turn_rate = 100
+    roombot.settings(straight_speed, straight_acceleration, turn_rate)
+    roombot.straight(150)
+    turn_to(90)
+    roombot.straight(940, wait=False)
+    turn_bear(45)
+    wait(3500)
+    roombot.settings(600, 200)
+    roombot.curve(-400, -30)
+    roombot.settings(straight_speed, straight_acceleration, turn_rate)
+    turn_bear(90)
+    roombot.settings(500, 500)
+    roombot.straight(450, then=Stop.NONE)
+    roombot.curve(400, 60)
+
+
+def run4():
+    hub.imu.reset_heading(0)
     straight_acceleration = 500
     turn_rate = 150
     roombot.settings(350, straight_acceleration, turn_rate)
-    hub.imu.reset_heading(0)
     arm.run_time(1000, 100, wait=False)
     roombot.straight(-300)
     turn_to(-45)
@@ -241,9 +269,10 @@ def cycle(iterable):
 sensor.detectable_colors(run_colors)
 color_cycle = cycle(run_colors)
 color_map = {
-    Color.BLACK: "S",
-    Color.YELLOW: "3",
+    Color.BLACK: "3",
+    Color.YELLOW: "4",
     Color.PURPLE: "2",
+    Color.WHITE: "S",
 }
 
 while sensor.color() != next(color_cycle):
@@ -258,9 +287,14 @@ selected = hub_menu(*menu)  # pylint: disable=E1111
 
 if selected == "S":
     run1()
+
 elif selected == "2":
     run2()
+
 elif selected == "3":
     run3()
+
+elif selected == "4":
+    run4()
 
 print(selected)
