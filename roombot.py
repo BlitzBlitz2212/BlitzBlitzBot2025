@@ -72,7 +72,7 @@ def no_wall_turn(angle, speed=70):
     bear.control.limits(acceleration=motor_acceleration)
 
 
-def wall_turn(angle, speed=70):
+def wall_turn(angle, speed=90):
     roombot.settings(turn_rate=speed)
     roombot.turn(angle, wait=False)
     bear.run_angle(speed, -angle)
@@ -180,9 +180,18 @@ def run1():
 
 
 def run2():
-    roombot.straight(200)
-    turn_bear(90)
-
+    roombot.settings(220, straight_acceleration=350, turn_rate=150)
+    roombot.straight(100)
+    wall_turn(20)
+    roombot.straight(500)
+    wall_turn(70)
+    straight_time(100, 3000)
+    roombot.straight(-180)
+    wall_turn(90)
+    roombot.straight(-100)
+    roombot.turn(-90)
+    roombot.straight(-300)
+    turn_bear(20000)
 
 def run3():
     straight_acceleration = 500
